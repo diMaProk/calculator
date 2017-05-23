@@ -1,4 +1,4 @@
-package com.gmail.pdv.calculator;
+package com.gmail.pdv.gui;
 
 import java.awt.Dimension;
 import java.awt.LayoutManager;

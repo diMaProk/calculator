@@ -1,17 +1,26 @@
 package com.gmail.pdv.gui;
 
+import com.gmail.pdv.listeners.ChangeSkinActionListener;
 import com.gmail.pdv.listeners.CalcButtonActionListener;
 import com.gmail.pdv.listeners.CalcTextFieldFocusListener;
+import com.jtattoo.plaf.AbstractLookAndFeel;
+import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
+import com.jtattoo.plaf.aluminium.AluminiumLookAndFeel;
 import com.jtattoo.plaf.hifi.HiFiLookAndFeel;
+import com.jtattoo.plaf.mcwin.McWinLookAndFeel;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 public class TestCalculator {
     
@@ -21,6 +30,7 @@ public class TestCalculator {
     private MyJButton btnSubstruct;
     private MyJButton btnDivide;
     private MyJButton btnMultiply;
+    private JButton btnChangeSkin;
     
     private MyJLabel labelOperand1;
     private MyJLabel labelOperand2;
@@ -35,14 +45,16 @@ public class TestCalculator {
     private MyJPanel panel3;
     
     private JFrame frame;
+    private int skinCounter = 0;
 
+        
+    static TestCalculator gui = new TestCalculator();
 
 
     public static void main(String[] args) {
         
-        setSkin();
         
-        TestCalculator gui = new TestCalculator();
+        gui.setSkin();
         
         gui.createLables();
         gui.createTextFields();
@@ -50,22 +62,40 @@ public class TestCalculator {
         gui.createPanels();
         gui.createFrame();
         
-        
-        
-        
-                    
     }
 
     //<editor-fold defaultstate="collapsed" desc="create GUI components">
-    private static void setSkin() {
+    public void setSkin() {
+           
+        AbstractLookAndFeel currentSkin = new HiFiLookAndFeel();    // use skins form JTatoo lib
+        
+        switch (skinCounter){
+            case 0: skinCounter++; 
+                    break;
+            case 1: currentSkin = new McWinLookAndFeel();
+                    skinCounter++;
+                    break;
+            case 2: currentSkin = new AcrylLookAndFeel();
+                    skinCounter++;
+                    break;
+            case 3: currentSkin = new AluminiumLookAndFeel();
+                    skinCounter = 0;
+                    break;                
+            default: break;
+    }
+        
+        
         try {
-            //UIManager.setLookAndFeel(new NimbusLookAndFeel());
-            UIManager.setLookAndFeel(new HiFiLookAndFeel()); // using skin from JTatoo library
+            UIManager.setLookAndFeel(currentSkin); 
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(TestCalculator.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         JFrame.setDefaultLookAndFeelDecorated(true);
+        
+        if (frame != null){
+            SwingUtilities.updateComponentTreeUI(frame);
+        }
     }
     
     private void createLables() {
@@ -91,14 +121,20 @@ public class TestCalculator {
         btnDivide = new MyJButton("divide", "  /  ");
         btnMultiply = new MyJButton("multiply", "  x  ");
         
+        btnChangeSkin = new JButton("Change skin");
+        btnChangeSkin.setPreferredSize(new Dimension(120,30));
+        btnChangeSkin.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
+        btnChangeSkin.setForeground(Color.ORANGE);
+        
         addButtonListeners();
+        addChangeSkinListeners();
         
     }
     
     private void createPanels() {
         panel1 = new MyJPanel("panel1", new FlowLayout(FlowLayout.LEFT));
         panel2 = new MyJPanel("panel2", new FlowLayout(FlowLayout.CENTER));
-        panel3 = new MyJPanel("panel3", new FlowLayout(FlowLayout.CENTER));
+        panel3 = new MyJPanel("panel3", new FlowLayout(FlowLayout.TRAILING));
         
         panel1.add(labelOperand1);
         panel1.add(jtxtOperand1);
@@ -112,6 +148,7 @@ public class TestCalculator {
         
         panel3.add(labelResult);
         panel3.add(jtxtResult);
+        panel3.add(btnChangeSkin);
         
     }
     
@@ -139,7 +176,6 @@ public class TestCalculator {
         btnDivide.addActionListener(b1);
         btnMultiply.addActionListener(b1);
         btnSubstruct.addActionListener(b1);
-        
     }
 
     private void addTextFieldListeners() {
@@ -147,7 +183,12 @@ public class TestCalculator {
         jtxtOperand1.addFocusListener(new CalcTextFieldFocusListener(jtxtOperand1));
         
         jtxtOperand2.addFocusListener(new CalcTextFieldFocusListener(jtxtOperand2));        
-
+    }
+    
+    private void addChangeSkinListeners() {
+        
+        btnChangeSkin.addActionListener(new ChangeSkinActionListener (gui));               
+        
     }
     
     

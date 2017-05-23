@@ -2,6 +2,7 @@ package com.gmail.pdv.gui;
 
 import com.gmail.pdv.listeners.CalcButtonActionListener;
 import com.gmail.pdv.listeners.CalcTextFieldFocusListener;
+import com.jtattoo.plaf.hifi.HiFiLookAndFeel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.logging.Level;
@@ -58,8 +59,8 @@ public class TestCalculator {
     //<editor-fold defaultstate="collapsed" desc="create GUI components">
     private static void setSkin() {
         try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
-            //UIManager.setLookAndFeel(new HiFiLookAndFeel()); // using skin from JTatoo library
+            //UIManager.setLookAndFeel(new NimbusLookAndFeel());
+            UIManager.setLookAndFeel(new HiFiLookAndFeel()); // using skin from JTatoo library
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(TestCalculator.class.getName()).log(Level.SEVERE, null, ex);
         }
